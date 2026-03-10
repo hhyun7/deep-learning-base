@@ -1,3 +1,4 @@
+import os
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -29,8 +30,13 @@ model = SimpleModel(input_dim=784, output_dim=10)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), lr=0.01)
 
+#모델을 저장할 폴더 만들기
+os.makedirs('checkpoints', exist_ok=True)
+
 print(f"--학습시작 (데이터 {len(train_dataset)}장)--")
-print(f"학습 전: {evaluate(model, test_loader):.2f}")
+#최고 점수를 기억할 변수 생성
+best_acc = 0.0
+
 #4 training loop
 epochs = 5
 for epoch in range(epochs):
@@ -59,4 +65,9 @@ for epoch in range(epochs):
 
     print(f"Epoch {epoch+1}/{epochs} | Loss: {running_loss/len(train_loader):.4f} | Train Acc: {train_acc:.2f} | Test Acc: {train_acc:.2f}%")
 
+    #최고 점수 갱신 시 모델 저장
+    if test_acc > best_acc:
+        best_acc=test_acc #최고 점수 업데이트
+        torch.save(model.state_dict(), 'checkpoints/best_model.pth')
+        print(" -> 최고 점수 갱신 / 모델 저장 완료 (checkpoints/best_model.pth)")
 print("--학습 완료--")
