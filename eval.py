@@ -11,7 +11,7 @@ def evaluate(model, detaloader):
         for samples, labels in detaloader:
 
             #입력 데이터 모양 맞추기 (28*28 이미지 -> 784 일렬로 펴기)
-            samples = samples.view(-1,28*28)
+            #samples = samples.view(-1,28*28)
             outputs = model(samples)
             
             #3. 가장 높은 확률을 가진 정답 고르기

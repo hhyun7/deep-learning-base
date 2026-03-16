@@ -7,6 +7,7 @@ from torchvision import datasets, transforms
 
 # simple model import
 from models.simple_model import SimpleModel
+from models.cnn_model import CNNModel
 from eval import evaluate # 채점기
 
 #1 데이터 불러오기
@@ -23,7 +24,8 @@ test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
 #2 모델 준비 (크기 변경)
 #입력: 28*28 이미지 = 784 픽셀
 #출력: 숫자 0~9 = 10개 클래스
-model = SimpleModel(input_dim=784, output_dim=10)
+#model = SimpleModel(input_dim=784, output_dim=10)
+model = CNNModel(input_dim=784, output_dim=10)
 
 #3 설정 (Loss 변경)
 #분류 문제는 CrossEntropyLoss를 씀
@@ -47,7 +49,7 @@ for epoch in range(epochs):
 
     for samples, labels in train_loader:
         #이미지 펼치기
-        samples = samples.view(-1, 28*28)
+        #samples = samples.view(-1, 28*28)
 
         #예측 -> 오차
         outputs = model(samples)
@@ -63,7 +65,7 @@ for epoch in range(epochs):
     train_acc = evaluate(model, train_loader) #공부한 걸로 시험(보통 점수 높음)
     test_acc = evaluate(model, test_loader) #안 본 걸로 시험(진짜 실력)
 
-    print(f"Epoch {epoch+1}/{epochs} | Loss: {running_loss/len(train_loader):.4f} | Train Acc: {train_acc:.2f} | Test Acc: {train_acc:.2f}%")
+    print(f"Epoch {epoch+1}/{epochs} | Loss: {running_loss/len(train_loader):.4f} | Train Acc: {train_acc:.2f} | Test Acc: {test_acc:.2f}%")
 
     #최고 점수 갱신 시 모델 저장
     if test_acc > best_acc:
