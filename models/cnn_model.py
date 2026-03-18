@@ -14,6 +14,13 @@ class CNNModel (nn.Module):
         self.relu2 = nn.ReLU()
         self.fc4 = nn.MaxPool2d(2)
 
+        self.dropout = nn.Dropout(0.30) #Dropout: Overfitting 방지 위해 무작위로 신경망의 일부 차단
+        #test1 0.25 / epoch 8 : test acc 97.59
+        #test2 0.30 / epoch 8 : test acc 97.66
+        #test3 0.35 / epoch 10 : test acc 97.86
+        #test4 0.5 / epoch 10 : test acc 97.90
+        #test5 0.5 / epoch 15 : test acc 98.00
+
         self.fc5 = nn.Linear(800,output_dim)
 
     def forward(self, x): #forward : 예측 함수 / 데이터 흐름도(x->Wx+b->ReLU->Wx+b->output)
@@ -24,6 +31,7 @@ class CNNModel (nn.Module):
         out = self.relu2(out)
         out = self.fc4(out)
         out = out.view(out.size(0), -1)
+        out = self.dropout(out)
         out = self.fc5(out)
         
         return out

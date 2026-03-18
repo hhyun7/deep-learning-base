@@ -40,7 +40,7 @@ print(f"--학습시작 (데이터 {len(train_dataset)}장)--")
 best_acc = 0.0
 
 #4 training loop
-epochs = 5
+epochs = 15
 for epoch in range(epochs):
     
     #학습 모드
