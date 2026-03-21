@@ -19,7 +19,7 @@ class CNNModel (nn.Module):
         #test2 0.30 / epoch 8 : test acc 97.66
         #test3 0.35 / epoch 10 : test acc 97.86
         #test4 0.5 / epoch 10 : test acc 97.90
-        #test5 0.5 / epoch 15 : test acc 98.00
+        #test5 0.5 / epoch 15 : test acc 98.00         
 
         self.fc5 = nn.Linear(800,output_dim)
 

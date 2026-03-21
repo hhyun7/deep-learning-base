@@ -11,14 +11,26 @@ from models.cnn_model import CNNModel
 from eval import evaluate # 채점기
 
 #1 데이터 불러오기
-transform = transforms.Compose([transforms.ToTensor()])
+transform_test = transforms.Compose([transforms.ToTensor()])
+#데이터 증강(Data Augmentation) 회전, 이동
+transform_train = transforms.Compose([transforms.RandomRotation(10),
+                                     transforms.RandomAffine(degrees=0, translate=(0.1,0.1)),        
+                                     transforms.ToTensor()])
+
+#test 1. Rotation 15 epoch 15: 98.09%
+#test 2. Rotation 20 epoch 15: 정확도 잘 안오름 97.93%
+#test 3. Rotation 10 epoch 15: 98.16%
+#test 4. Rotation 10 epoch 20: 98.48%
+#test 5. Rotation 10 epoch 15 Optimizer SDG->Adam: 99.03%
+
+#원래 train이랑 test랑 차이가 더 많이 나나? 아니다. 과적합이 줄어들어 차이가 덜 나야함
 
 #학습용 데이터 60,000장
-train_dataset = datasets.MNIST(root='./data', train=True, download=True, transform=transform)
+train_dataset = datasets.MNIST(root='./data', train=True, download=True, transform=transform_train)
 train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
 
 #시험용 데이터 10,000장
-test_dataset = datasets.MNIST(root='./data', train=False, download=True, transform=transform)
+test_dataset = datasets.MNIST(root='./data', train=False, download=True, transform=transform_test)
 test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
 
 #2 모델 준비 (크기 변경)
@@ -30,7 +42,7 @@ model = CNNModel(input_dim=784, output_dim=10)
 #3 설정 (Loss 변경)
 #분류 문제는 CrossEntropyLoss를 씀
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(model.parameters(), lr=0.01)
+optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 #모델을 저장할 폴더 만들기
 os.makedirs('checkpoints', exist_ok=True)

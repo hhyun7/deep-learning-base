@@ -10,7 +10,7 @@ transform = transforms.Compose([
 ])
 
 
-img=Image.open('my_digit2.png')
+img=Image.open('my_digit3.png')
 img=transform(img)
 img = 1.0-img
 img = img.unsqueeze(0)
@@ -33,5 +33,5 @@ with torch.no_grad():
     output = model(image)
     _, predicted = torch.max(output, 1)
 
-print(f"실제 정답: 7")
+print(f"실제 정답: 4")
 print(f"모델 예측: {predicted.item()}")
